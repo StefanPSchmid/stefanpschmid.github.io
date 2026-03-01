@@ -1,91 +1,231 @@
 ---
-import { Container, FeatureCard } from '@components/odyssey-theme';
-
 import Layout from '../layouts/Page.astro';
-import HomeHeroSection from '../components/sections/heros/HomeHeroSection.astro';
+import Container from '../components/core/Container.astro';
+import SocialIcon from '../components/SocialIcon.astro';
+import { profile, contactLinks } from '../config/profile.js';
+import { newsEntries } from '../config/news.js';
+
+const seo = {
+	title: 'Stefan P. Schmid',
+	description: 'Academic website of Stefan P. Schmid.',
+};
+
+const latestNews = [...newsEntries]
+	.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime())
+	.slice(0, 3);
+
+const formatDate = (dateString) =>
+	new Intl.DateTimeFormat('en-US', {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+	}).format(new Date(dateString));
+
+const formatTags = (tags = []) => tags.map((tag) => `#${tag}`).join(', ');
 ---
 
-<Layout>
-	<HomeHeroSection />
+<Layout {seo}>
 	<Container>
-		<section class="feature-card__section">
-			<h2>Landing Pages</h2>
-			<p>
-				Use one of our landing pages to jumpstart your website or
-				ad campaign.
-			</p>
-			<div class="feature-card__grid">
-				<FeatureCard href="/landing-pages/landing-1" title="Landing Page 1" imgSrc="/assets/images/home/screenshots/landing-1">
-				</FeatureCard>
-				<FeatureCard href="/landing-pages/landing-2" title="Landing Page 2" imgSrc="/assets/images/home/screenshots/landing-2">
-				</FeatureCard>
+		<section class="home-intro">
+			<div class="home-intro__left">
+				<div class="portrait">
+					<img src={profile.portrait} alt="Portrait of Stefan P. Schmid" />
+				</div>
+				<ul class="social-icons" aria-label="Social and contact links">
+					{contactLinks.map((link) => (
+						<li>
+							<a
+								href={link.url}
+								target={link.newTab ? '_blank' : undefined}
+								rel={link.newTab ? 'noopener noreferrer' : undefined}
+								title={link.name}
+								aria-label={link.name}
+							>
+								<SocialIcon name={link.icon} />
+							</a>
+						</li>
+					))}
+				</ul>
 			</div>
-		</section>
-	</Container>
 
-	<Container>
-		<section class="feature-card__section">
-			<h2>Company Pages</h2>
-			<p>
-				Use one of our prebuilt company pages for your about page, contact page,
-				legal pages, blog posts, etc.
-			</p>
-			<div class="feature-card__grid">
-				<FeatureCard href="/company/about" title="About Page" imgSrc="/assets/images/home/screenshots/about">
-				</FeatureCard>
-				<FeatureCard href="/company/contact" title="Contact Page" imgSrc="/assets/images/home/screenshots/contact">
-				</FeatureCard>
-				<FeatureCard href="/blog/" title="Blog Page" imgSrc="/assets/images/home/screenshots/blog">
-				</FeatureCard>
-				<FeatureCard
-					href="/blog/posts/remote-work-mental-health"
-					title="Blog Post"
-          imgSrc="/assets/images/home/screenshots/blog-post"
-				>
-				</FeatureCard>
-				<FeatureCard
-					href="/company/legal"
-					imgSrc="/assets/images/home/screenshots/legal"
-					title="Legal Page"
-				>
-				</FeatureCard>
+			<div class="home-intro__right">
+				<p class="kicker">{profile.role} · {profile.affiliation}</p>
+				<h1>{profile.name}</h1>
+				{profile.about.map((paragraph) => <p>{paragraph}</p>)}
 			</div>
 		</section>
-	</Container>
 
-	<Container>
-		<section class="feature-card__section">
-			<h2>Theme Pages</h2>
-			<p>Learn more about how to set up and use the Odyssey Theme.</p>
-			<div class="feature-card__grid">
-				<FeatureCard
-					href="/theme/get-started"
-					imgSrc="/assets/images/home/screenshots/get-started"
-					title="Get Started"
-				>
-				</FeatureCard>
-				<FeatureCard
-					href="/theme/style-guide"
-					imgSrc="/assets/images/home/screenshots/style-guide"
-					title="Style Guide"
-				>
-				</FeatureCard>
-			</div>
-		</section>
+			<section class="home-news">
+				<div class="home-news__header">
+					<h2>Recent news</h2>
+					<a href="/news" class="home-news__all-link">View all news</a>
+				</div>
+				<div class="home-news__grid">
+					{latestNews.map((item) => (
+						<a class="home-news__item" href={`/news/${item.slug}`}>
+							<h3>{item.title}</h3>
+							<p class="home-news__date">
+								{formatDate(item.publishDate)}{item.tags?.length > 0
+									? `, ${formatTags(item.tags)}`
+									: ''}
+							</p>
+							<p class="home-news__summary">{item.summary}</p>
+						</a>
+					))}
+				</div>
+			</section>
 	</Container>
 </Layout>
 
 <style>
-	.feature-card__section {
-		margin: var(--section-margin) auto;
-	}
-	.feature-card__grid {
+	.home-intro {
+		margin: 4rem 0 2rem;
 		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: var(--theme-grid-gap);
+		gap: 3rem;
+		grid-template-columns: 1fr 1.25fr;
+		align-items: center;
 	}
-	@media (max-width: 768px) {
-		.feature-card__grid {
+
+	.home-intro__left {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.social-icons {
+		margin: 0;
+		padding: 1rem 0 0;
+		list-style: none;
+		display: flex;
+		gap: 0.75rem;
+	}
+
+	.social-icons a {
+		height: 2.4rem;
+		width: 2.4rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		color: var(--theme-on-surface-1);
+		background: var(--theme-surface-1);
+		border: 1px solid color-mix(in srgb, var(--theme-on-bg) 25%, transparent);
+		transition:
+			transform var(--theme-transition),
+			border-color var(--theme-transition),
+			background-color var(--theme-transition);
+	}
+
+	.social-icons a:hover {
+		transform: translateY(-1px);
+		border-color: var(--theme-primary);
+		background-color: color-mix(in srgb, var(--theme-surface-1) 70%, var(--theme-primary) 30%);
+	}
+
+	.portrait {
+		width: clamp(180px, 24vw, 280px);
+		aspect-ratio: 1 / 1;
+		border-radius: 50%;
+		overflow: hidden;
+		border: 2px solid var(--theme-primary);
+		background-color: var(--theme-surface-1);
+	}
+
+	.portrait img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.kicker {
+		font-size: var(--font-size-sm);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		opacity: 0.75;
+		margin-bottom: 0.6rem;
+	}
+
+	.home-intro__right h1 {
+		margin-bottom: 1.2rem;
+	}
+
+	@media (max-width: 900px) {
+		.home-intro {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+			margin-top: 2.5rem;
+		}
+	}
+
+	.home-news {
+		margin: 1.5rem 0 3rem;
+	}
+
+	.home-news__header {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 0.8rem;
+	}
+
+	.home-news__header h2 {
+		margin: 0;
+		font-size: clamp(1.35rem, 1rem + 1vw, 1.85rem);
+	}
+
+	.home-news__all-link {
+		font-size: var(--font-size-sm);
+		color: inherit;
+		text-decoration: none;
+		opacity: 0.82;
+	}
+
+	.home-news__all-link:hover {
+		opacity: 1;
+		text-decoration: underline;
+	}
+
+	.home-news__grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1rem;
+	}
+
+	.home-news__item {
+		display: block;
+		color: inherit;
+		text-decoration: none;
+		background: var(--theme-surface-1);
+		border-radius: 0.85rem;
+		padding: 0.85rem 0.95rem;
+	}
+
+	.home-news__item h3 {
+		margin: 0;
+		font-size: 0.95rem;
+		line-height: 1.3;
+	}
+
+	.home-news__date {
+		margin: 0.2rem 0 0.35rem;
+		font-size: 0.82rem;
+		opacity: 0.76;
+	}
+
+	.home-news__summary {
+		margin: 0;
+		font-size: 0.86rem;
+		opacity: 0.88;
+		line-height: 1.5;
+	}
+
+	.home-news__item:hover h3 {
+		text-decoration: underline;
+	}
+
+	@media (max-width: 960px) {
+		.home-news__grid {
 			grid-template-columns: 1fr;
 		}
 	}

@@ -1,9 +1,8 @@
 ---
-import { Icon } from 'astro-icon/components';
 import Container  from '../core/Container.astro';
-import Plug from './Plug.astro';
+import SocialIcon from '../SocialIcon.astro';
 
-const { footerSocials, footerLists, copyrightName, background, color, showPlug: showPlug = true } =
+const { socials = [], navLinks = [], background, color } =
   Astro.props;
 ---
 
@@ -11,49 +10,37 @@ const { footerSocials, footerLists, copyrightName, background, color, showPlug: 
   style={background && `--footer-bg:${background}; --footer-color:${color}`}
 >
   <Container>
-    <div class="footer-grid__container">
-      <div class="footer-brand__container">
-        <div>
+    <div class="footer-grid">
+      <div class="footer-left">
+        <a href="/" class="footer-name">
           <slot name="logo" />
-        </div>
-        <ul class="footer-socials__list">
-          {
-            footerSocials.map((social) => (
-              <li class="footer-socials__item">
-                <a
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="footer-socials__link"
-                  title={`Open ${social.name} profile`}
-                >
-                  <Icon name={social.icon} width={24} height={24} />
-                </a>
-              </li>
-            ))
-          }
+        </a>
+        <ul class="footer-socials">
+          {socials.map((social) => (
+            <li>
+              <a
+                href={social.url}
+                target={social.newTab ? '_blank' : undefined}
+                rel={social.newTab ? 'noopener noreferrer' : undefined}
+                title={social.name}
+                aria-label={social.name}
+              >
+                <SocialIcon name={social.icon} />
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
-      {
-        footerLists.map((list) => (
-          <div>
-            <p><strong>{list.title}</strong></p>
-            <ul class="footer-link__list">
-              {list.items.map((item) => (
-                <li>
-                  <a href={item.slug}>{item.title}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))
-      }
+      <nav class="footer-right" aria-label="Footer navigation">
+        <ul class="footer-nav">
+          {navLinks.map((item) => (
+            <li>
+              <a href={item.slug}>{item.title}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </div>
-    <div class="footer-copyright__container">
-      {showPlug && <Plug/>}
-      <p>Copyright &copy; {new Date().getFullYear()} {copyrightName}</p>
-    </div>
-
   </Container>
 </footer>
 
@@ -61,66 +48,71 @@ const { footerSocials, footerLists, copyrightName, background, color, showPlug: 
   footer {
     --footer-bg: var(--theme-primary);
     --footer-color: var(--theme-on-primary);
-    min-height: 40vh;
     background-color: var(--footer-bg);
     color: var(--footer-color);
-    border-top-left-radius: var(--theme-shape-radius);
-    border-top-right-radius: var(--theme-shape-radius);
+    margin-top: 4rem;
+    padding: 2.5rem 0;
   }
-  .footer-grid__container {
-    padding: 10vh 0 1rem 0;
+  .footer-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 2rem;
+    grid-template-columns: 2fr 1fr;
   }
-  .footer-socials__list {
-    margin: 1rem 0;
-    padding: 0;
-    display: flex;
-    list-style: none;
+  .footer-name {
+    color: inherit;
+    display: inline-block;
+    text-decoration: none;
+    margin-bottom: 1rem;
   }
-  .footer-socials__item {
-    margin-right: 0.5rem;
+  .footer-name:hover {
+    text-decoration: underline;
   }
-  .footer-link__list {
+  .footer-socials,
+  .footer-nav {
     margin: 0;
     padding: 0;
     list-style: none;
   }
-  .footer-link__list li {
+  .footer-socials {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .footer-nav li {
     margin-bottom: 0.5rem;
   }
-  .footer-link__list li a {
+  .footer-socials a,
+  .footer-nav a {
+    color: inherit;
     text-decoration: none;
   }
-  .footer-link__list li a:hover {
-    opacity: 0.84;
+  .footer-socials a {
+    height: 2.4rem;
+    width: 2.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--theme-surface-1) 85%, transparent);
+    border: 1px solid color-mix(in srgb, var(--theme-on-bg) 30%, transparent);
   }
-  .footer-copyright__container {
-    display: flex;
-    flex-direction: column;
-    /* justify-content: space-between; */
+  .footer-socials a:hover,
+  .footer-nav a:hover {
+    text-decoration: underline;
   }
-  .footer-copyright__container p {
-    font-size: var(--font-size-sm);
+  .footer-socials a:hover {
+    text-decoration: none;
+    border-color: var(--theme-primary);
   }
-  @media (max-width: 768px) {
-    .footer-grid__container :first-child {
-      grid-column: 1/-1;
-    }
-    .footer-grid__container {
-      padding: 5vh 0;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-    }
+  .footer-right {
+    justify-self: end;
   }
   @media (max-width: 600px) {
-    .footer-grid__container {
-      padding: 5vh 0;
+    .footer-grid {
       grid-template-columns: 1fr;
-      gap: 1rem;
     }
-    .footer-copyright__container {
-      flex-direction: column;
+    .footer-right {
+      justify-self: start;
     }
   }
 </style>

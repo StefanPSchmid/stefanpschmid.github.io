@@ -1,12 +1,32 @@
 ---
 ---
 
-<!-- This is a simple script to check if there is a theme value in local storage. That way the theme stays with you between pages -->
 <script is:inline>
-	const doc = document.firstElementChild;
-	const localStorageTheme = localStorage.getItem('theme');
+	(() => {
+		const doc = document.documentElement;
+		const themeKey = 'theme';
+		const darkQuery = '(prefers-color-scheme: dark)';
 
-	if (localStorageTheme !== null) {
-		doc.setAttribute('data-theme', localStorageTheme);
-	}
+		const normalizeTheme = (value) => {
+			if (value === 'dark') return 'dark';
+			if (['light', 'default', 'earth', 'ocean', 'sand'].includes(value)) {
+				return 'light';
+			}
+			return null;
+		};
+
+		let storedTheme = null;
+		try {
+			storedTheme = normalizeTheme(localStorage.getItem(themeKey));
+		} catch {
+			// Ignore storage access errors and continue with system preference.
+		}
+
+		const systemTheme =
+			window.matchMedia && window.matchMedia(darkQuery).matches
+				? 'dark'
+				: 'light';
+
+		doc.setAttribute('data-theme', storedTheme ?? systemTheme);
+	})();
 </script>

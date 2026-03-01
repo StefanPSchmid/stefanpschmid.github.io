@@ -1,10 +1,11 @@
 ---
-import { Header, Button, Footer } from '@components/odyssey-theme';
+import { Header, Footer } from '@components/odyssey-theme';
 import Layout from './Base.astro';
 import type { Props as BaseHeadProps } from '../components/head/BaseHead.astro';
 import Logo from '../components/Logo.astro';
 import settings from '../config/settings';
-import { footerLists, footerSocials } from '../config/footer';
+import ThemeToggle from '../components/theme-switcher/ThemeToggle.astro';
+import { contactLinks } from '../config/profile.js';
 
 
 export interface Props {
@@ -21,20 +22,18 @@ const { seo } = Astro.props as Props;
 		<span slot="logo">
 			<Logo />
 		</span>
-		<Button slot="action-item" href="/theme/get-started">Get Started</Button>
+		{settings.enableThemeSwitcher && <ThemeToggle slot="action-item" />}
 	</Header>
-	<div id="page">
-		<slot />
-	</div>
-	<Footer
-		slot="footer"
-		background="var(--theme-surface-1)"
-		color="var(--theme-on-surface-1)"
-		footerLists={footerLists}
-    footerSocials={footerSocials}
-		copyrightName={settings.name}
-    showPlug={settings.showPlug}
-	>
-		<Logo slot="logo" />
-	</Footer>
-</Layout>
+		<div id="page">
+			<slot />
+		</div>
+		<Footer
+			slot="footer"
+			background="var(--theme-surface-1)"
+			color="var(--theme-on-surface-1)"
+			navLinks={nav}
+			socials={contactLinks}
+		>
+			<Logo slot="logo" />
+		</Footer>
+	</Layout>

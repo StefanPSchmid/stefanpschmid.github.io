@@ -1,0 +1,218 @@
+---
+import Layout from '../layouts/Page.astro';
+import Container from '../components/core/Container.astro';
+import { publications, fullBibliographyUrl } from '../config/publications.js';
+
+const seo = {
+	title: 'Publications',
+	description: 'Publication list of Stefan P. Schmid.',
+};
+
+const years = [...new Set(publications.map((item) => item.year))].sort((a, b) => b - a);
+---
+
+<Layout {seo}>
+	<Container>
+		<section class="pub-layout">
+			<aside class="pub-years" aria-label="Publication years">
+				<h1>Publications</h1>
+				<ul>
+					{years.map((year) => (
+						<li>
+							<a href={`#year-${year}`}>{year}</a>
+						</li>
+					))}
+				</ul>
+				<a class="pub-all-bib" href={fullBibliographyUrl} download>
+					Download full bibliography
+				</a>
+			</aside>
+
+			<div class="pub-content">
+				{years.map((year) => (
+					<section id={`year-${year}`} class="pub-year-group">
+						<h2>{year}</h2>
+						{publications
+							.filter((item) => item.year === year)
+								.map((item) => (
+									<article class="pub-entry">
+										<h3>{item.title}</h3>
+										<p class="pub-authors" set:html={item.authors}></p>
+										<p class="pub-citation">{item.citation}</p>
+										<div class="pub-links">
+										<a
+											class="pub-link-box"
+											href={item.paperUrl}
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											Paper
+										</a>
+										<a class="pub-link-box" href={item.bibtexUrl} download>
+											BibTeX
+										</a>
+										{item.codeUrl && (
+											<a
+												class="pub-link-box"
+												href={item.codeUrl}
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												Code
+											</a>
+										)}
+									</div>
+								</article>
+							))}
+					</section>
+				))}
+			</div>
+		</section>
+	</Container>
+</Layout>
+
+<style>
+	.pub-layout {
+		margin: 3rem 0;
+		display: grid;
+		grid-template-columns: minmax(180px, 0.8fr) minmax(0, 2.4fr);
+		gap: 2.5rem;
+	}
+
+	.pub-years {
+		position: sticky;
+		top: 1.5rem;
+		align-self: start;
+	}
+
+	.pub-years h1 {
+		margin-bottom: 1.25rem;
+		font-size: clamp(1.65rem, 1.05rem + 1.8vw, 2.2rem);
+		line-height: 1.15;
+	}
+
+	.pub-years ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: grid;
+		gap: 0.65rem;
+	}
+
+	.pub-all-bib {
+		margin-top: 1.1rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.36rem 0.76rem;
+		font-size: 0.82rem;
+		text-decoration: none;
+		border-radius: 999px;
+		background: var(--theme-surface-1);
+		border: 1px solid color-mix(in srgb, var(--theme-on-bg) 25%, transparent);
+		color: inherit;
+	}
+
+	.pub-all-bib:hover {
+		border-color: var(--theme-primary);
+	}
+
+	.pub-years a {
+		color: inherit;
+		text-decoration: none;
+		opacity: 0.82;
+	}
+
+	.pub-years a:hover {
+		opacity: 1;
+		text-decoration: underline;
+	}
+
+	.pub-content {
+		display: grid;
+		gap: 2.25rem;
+	}
+
+	.pub-year-group {
+		scroll-margin-top: 4rem;
+	}
+
+	.pub-year-group h2 {
+		margin-bottom: 0.75rem;
+	}
+
+	.pub-entry {
+		padding: 0.7rem 0;
+	}
+
+	.pub-entry h3 {
+		margin: 0 0 0.22rem;
+		font-size: 1rem;
+		line-height: 1.28;
+		font-weight: 600;
+	}
+
+	.pub-authors,
+	.pub-citation {
+		margin: 0;
+		font-size: 0.9rem;
+	}
+
+	.pub-authors {
+		opacity: 0.92;
+	}
+
+	.pub-citation {
+		opacity: 0.78;
+		margin-top: 0.16rem;
+	}
+
+	.pub-links {
+		margin-top: 0.5rem;
+		display: flex;
+		gap: 0.6rem;
+		flex-wrap: wrap;
+	}
+
+	.pub-link-box {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.28rem 0.68rem;
+		font-size: 0.82rem;
+		text-decoration: none;
+		border-radius: 999px;
+		background: var(--theme-surface-1);
+		border: 1px solid color-mix(in srgb, var(--theme-on-bg) 25%, transparent);
+		color: inherit;
+	}
+
+	.pub-link-box:hover {
+		border-color: var(--theme-primary);
+	}
+
+	@media (max-width: 900px) {
+		.pub-layout {
+			grid-template-columns: 1fr;
+			gap: 1.75rem;
+		}
+
+		.pub-years {
+			position: static;
+		}
+
+		.pub-years ul {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		.pub-all-bib {
+			margin-top: 0.9rem;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.pub-years ul {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+</style>

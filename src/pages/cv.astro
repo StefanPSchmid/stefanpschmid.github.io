@@ -1,0 +1,236 @@
+---
+import Layout from '../layouts/Page.astro';
+import Container from '../components/core/Container.astro';
+import { profile } from '../config/profile.js';
+import { cvSections } from '../config/cv.js';
+
+const seo = {
+	title: `CV | ${profile.name}`,
+	description: `Curriculum vitae and background for ${profile.name}.`,
+};
+
+const getItemLines = (item) => {
+	if (Array.isArray(item.details) && item.details.length > 0) {
+		return item.details;
+	}
+
+	if (typeof item.description === 'string') {
+		return item.description
+			.split(';')
+			.map((line) => line.trim())
+			.filter(Boolean);
+	}
+
+	return [];
+};
+
+const getSectionGroups = (section) => {
+	if (Array.isArray(section.subsections) && section.subsections.length > 0) {
+		return section.subsections;
+	}
+
+	if (Array.isArray(section.items) && section.items.length > 0) {
+		return [{ title: null, items: section.items }];
+	}
+
+	return [];
+};
+---
+
+<Layout {seo}>
+	<Container>
+		<section class="cv-layout">
+			<aside class="cv-index" aria-label="CV sections">
+				<h1>CV</h1>
+				<ul>
+					{cvSections.map((section) => (
+						<li>
+							<a href={`#${section.id}`}>{section.title}</a>
+						</li>
+					))}
+				</ul>
+			</aside>
+
+			<div class="cv-content">
+					{cvSections.map((section) => (
+						<section id={section.id} class="cv-section">
+							<h2>{section.title}</h2>
+							<div class="cv-section-groups">
+								{getSectionGroups(section).map((group) => (
+									<div class="cv-group">
+										{group.title && <h3 class="cv-group-title">{group.title}</h3>}
+										<div class="cv-table" role="table" aria-label={`${group.title ?? section.title} entries`}>
+											{group.items.map((item) => {
+												const detailLines = getItemLines(item);
+
+												return (
+													<article class="cv-row" role="row">
+														<p class="cv-date" role="cell">{item.date}</p>
+														<div class="cv-details" role="cell">
+															{group.title ? <h4>{item.title}</h4> : <h3>{item.title}</h3>}
+															{detailLines.length > 1 ? (
+																<ul>
+																	{detailLines.map((line) => (
+																		<li>{line}</li>
+																	))}
+																</ul>
+															) : (
+																<p>{detailLines[0] ?? ''}</p>
+															)}
+														</div>
+													</article>
+												);
+											})}
+										</div>
+									</div>
+								))}
+							</div>
+					</section>
+				))}
+			</div>
+		</section>
+	</Container>
+</Layout>
+
+<style>
+	.cv-layout {
+		margin: 3rem 0;
+		display: grid;
+		grid-template-columns: minmax(220px, 0.9fr) minmax(0, 2.2fr);
+		gap: 2.5rem;
+	}
+
+	.cv-index {
+		position: sticky;
+		top: 1.5rem;
+		align-self: start;
+	}
+
+	.cv-index h1 {
+		margin-bottom: 1.25rem;
+	}
+
+	.cv-index ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.65rem;
+	}
+
+	.cv-index a {
+		color: inherit;
+		text-decoration: none;
+		opacity: 0.82;
+	}
+
+	.cv-index a:hover {
+		opacity: 1;
+		text-decoration: underline;
+	}
+
+	.cv-content {
+		display: grid;
+		gap: 2rem;
+	}
+
+	.cv-section {
+		scroll-margin-top: 4rem;
+	}
+
+	.cv-section h2 {
+		margin-bottom: 0.75rem;
+	}
+
+	.cv-section-groups {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.cv-group {
+		display: grid;
+		gap: 0.6rem;
+	}
+
+	.cv-group-title {
+		margin: 0.35rem 0 0;
+		font-size: 1rem;
+		font-weight: 700;
+	}
+
+	.cv-table {
+		display: grid;
+		gap: 0.7rem;
+	}
+
+	.cv-row {
+		display: grid;
+		grid-template-columns: minmax(120px, 160px) 1fr;
+		gap: 1.25rem;
+		padding: 0.95rem 1.15rem;
+		background: var(--theme-surface-1);
+		border-radius: 0.85rem;
+	}
+
+	.cv-date {
+		margin: 0;
+		font-size: var(--font-size-sm);
+		font-weight: 700;
+	}
+
+	.cv-details h3,
+	.cv-details h4 {
+		margin: 0 0 0.3rem;
+		font-size: 1.05rem;
+		line-height: 1.3;
+		font-weight: 700;
+		font-family: var(--theme-font-family-serif);
+	}
+
+	.cv-details p {
+		margin: 0;
+		font-size: 0.97rem;
+		opacity: 0.92;
+		line-height: 1.55;
+	}
+
+	.cv-details ul {
+		margin: 0;
+		padding-left: 1.15rem;
+		display: grid;
+		gap: 0.2rem;
+		font-size: 0.97rem;
+		opacity: 0.92;
+		line-height: 1.55;
+	}
+
+	.cv-details li {
+		margin: 0;
+	}
+
+	@media (max-width: 900px) {
+		.cv-layout {
+			grid-template-columns: 1fr;
+			gap: 1.75rem;
+		}
+
+		.cv-index {
+			position: static;
+		}
+
+		.cv-index ul {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 680px) {
+		.cv-row {
+			grid-template-columns: 1fr;
+			gap: 0.35rem;
+		}
+
+		.cv-index ul {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

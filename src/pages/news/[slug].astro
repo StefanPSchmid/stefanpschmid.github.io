@@ -1,0 +1,133 @@
+---
+import Layout from '../../layouts/Page.astro';
+import Container from '../../components/core/Container.astro';
+import { newsEntries } from '../../config/news.js';
+
+export function getStaticPaths() {
+	return newsEntries.map((entry) => ({
+		params: { slug: entry.slug },
+		props: { entry },
+	}));
+}
+
+const { entry } = Astro.props;
+
+const seo = {
+	title: `${entry.title} | News`,
+	description: entry.summary,
+};
+
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+}).format(new Date(entry.publishDate));
+
+const formattedTags = entry.tags?.map((tag) => `#${tag}`).join(', ');
+---
+
+<Layout {seo}>
+	<Container narrow>
+		<article class="news-article">
+			<p class="news-article__back">
+				<a href="/news">← Back to News</a>
+			</p>
+			<h1>{entry.title}</h1>
+			<p class="news-article__date">
+				{formattedDate}{formattedTags ? `, ${formattedTags}` : ''}
+			</p>
+			<p class="news-article__summary">{entry.summary}</p>
+			{entry.image && <img src={entry.image} alt={entry.title} class="news-article__image" />}
+			{entry.body?.length > 0 && (
+				<div class="news-article__body">
+					{entry.body.map((paragraph) => <p>{paragraph}</p>)}
+				</div>
+			)}
+			{(entry.paperUrl || entry.codeUrl) && (
+				<p class="news-article__links">
+					Check out the{' '}
+					{entry.paperUrl && (
+						<a href={entry.paperUrl} target="_blank" rel="noreferrer">
+							paper
+						</a>
+					)}
+					{entry.paperUrl && entry.codeUrl && ' and '}
+					{entry.codeUrl && (
+						<a href={entry.codeUrl} target="_blank" rel="noreferrer">
+							code
+						</a>
+					)}
+					.
+				</p>
+			)}
+			{entry.readMoreUrl && (
+				<p class="news-article__links">
+					<a href={entry.readMoreUrl} target="_blank" rel="noreferrer">
+						{entry.readMoreLabel ?? 'Read more here'}
+					</a>
+					.
+				</p>
+			)}
+		</article>
+	</Container>
+</Layout>
+
+<style>
+	.news-article {
+		margin: 3rem 0;
+	}
+
+	.news-article__back {
+		margin-bottom: 1rem;
+		font-size: var(--font-size-sm);
+	}
+
+	.news-article__back a {
+		color: inherit;
+		text-decoration: none;
+		opacity: 0.82;
+	}
+
+	.news-article__back a:hover {
+		opacity: 1;
+		text-decoration: underline;
+	}
+
+	.news-article__date {
+		margin: 0.3rem 0 1rem;
+		font-size: var(--font-size-sm);
+		opacity: 0.78;
+	}
+
+	.news-article__summary {
+		font-size: 1.02rem;
+		line-height: 1.55;
+		margin-bottom: 1.2rem;
+	}
+
+	.news-article__image {
+		width: 100%;
+		max-height: 460px;
+		object-fit: cover;
+		border-radius: 0.95rem;
+		margin-bottom: 1.25rem;
+	}
+
+	.news-article__body p {
+		margin-bottom: 0.9rem;
+	}
+
+	.news-article__links {
+		margin-top: 1rem;
+		font-weight: 500;
+	}
+
+	.news-article__links a {
+		color: var(--color-accent);
+		text-decoration: none;
+	}
+
+	.news-article__links a:hover {
+		text-decoration: underline;
+	}
+</style>

@@ -1,0 +1,161 @@
+---
+---
+
+<button
+	type="button"
+	class="theme-toggle"
+	data-theme-toggle
+	aria-label="Switch to dark theme"
+	aria-pressed="false"
+	title="Switch to dark theme"
+>
+	<span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">
+		<svg viewBox="0 0 24 24" focusable="false">
+			<circle cx="12" cy="12" r="4"></circle>
+			<path
+				d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+			></path>
+		</svg>
+	</span>
+	<span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">
+		<svg viewBox="0 0 24 24" focusable="false">
+			<path
+				d="M21 12.79A9 9 0 1 1 11.21 3c-.04.26-.06.53-.06.8a8 8 0 0 0 9.85 7.82z"
+			></path>
+		</svg>
+	</span>
+</button>
+
+<script>
+	const THEME_KEY = 'theme';
+	const root = document.documentElement;
+	const toggles = document.querySelectorAll('[data-theme-toggle]');
+	const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+	const normalizeTheme = (value) => {
+		if (value === 'dark') return 'dark';
+		if (['light', 'default', 'earth', 'ocean', 'sand'].includes(value)) {
+			return 'light';
+		}
+		return null;
+	};
+
+	const getStoredTheme = () => {
+		try {
+			return normalizeTheme(localStorage.getItem(THEME_KEY));
+		} catch {
+			return null;
+		}
+	};
+
+	const getSystemTheme = () => (darkModeQuery.matches ? 'dark' : 'light');
+
+	const updateToggleUI = (theme) => {
+		const nextTheme = theme === 'dark' ? 'light' : 'dark';
+		toggles.forEach((toggle) => {
+			toggle.setAttribute('aria-label', `Switch to ${nextTheme} theme`);
+			toggle.setAttribute('title', `Switch to ${nextTheme} theme`);
+			toggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+		});
+	};
+
+	const applyTheme = (theme, persist = false) => {
+		root.setAttribute('data-theme', theme);
+		updateToggleUI(theme);
+
+		if (!persist) return;
+		try {
+			localStorage.setItem(THEME_KEY, theme);
+		} catch {
+			// Ignore storage write errors (private mode, blocked storage, etc.).
+		}
+	};
+
+	const initialTheme =
+		getStoredTheme() ??
+		normalizeTheme(root.getAttribute('data-theme')) ??
+		getSystemTheme();
+
+	applyTheme(initialTheme);
+
+	toggles.forEach((toggle) => {
+		toggle.addEventListener('click', () => {
+			const currentTheme =
+				normalizeTheme(root.getAttribute('data-theme')) ?? getSystemTheme();
+			const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+			applyTheme(nextTheme, true);
+		});
+	});
+
+	darkModeQuery.addEventListener('change', (event) => {
+		if (getStoredTheme() !== null) return;
+		applyTheme(event.matches ? 'dark' : 'light');
+	});
+</script>
+
+<style>
+	.theme-toggle {
+		height: 2.75rem;
+		width: 2.75rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		border: 1px solid rgba(127, 127, 127, 0.45);
+		border-radius: 999px;
+		background-color: var(--theme-surface-1);
+		color: var(--theme-on-surface-1);
+		cursor: pointer;
+		-webkit-tap-highlight-color: transparent;
+		transition:
+			background-color var(--theme-transition),
+			border-color var(--theme-transition),
+			color var(--theme-transition),
+			transform var(--theme-transition);
+	}
+
+	.theme-toggle:hover {
+		transform: translateY(-1px);
+		border-color: var(--theme-primary);
+	}
+
+	.theme-toggle:focus-visible {
+		outline: 2px solid var(--theme-primary);
+		outline-offset: 3px;
+	}
+
+	.theme-toggle__icon {
+		position: absolute;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		transition:
+			opacity var(--theme-transition),
+			transform var(--theme-transition);
+	}
+
+	.theme-toggle svg {
+		width: 1.2rem;
+		height: 1.2rem;
+		stroke: currentColor;
+		fill: none;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-width: 2;
+	}
+
+	.theme-toggle__icon--moon {
+		opacity: 0;
+		transform: rotate(12deg) scale(0.75);
+	}
+
+	:root[data-theme='dark'] .theme-toggle__icon--sun {
+		opacity: 0;
+		transform: rotate(-12deg) scale(0.75);
+	}
+
+	:root[data-theme='dark'] .theme-toggle__icon--moon {
+		opacity: 1;
+		transform: rotate(0deg) scale(1);
+	}
+</style>

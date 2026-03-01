@@ -1,9 +1,11 @@
 # build output
 dist/
 .output/
+.astro/
 
 # dependencies
 node_modules/
+node_modules/.vite/
 
 # logs
 npm-debug.log*
