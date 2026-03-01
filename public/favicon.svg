@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="SPS favicon">
+  <rect width="256" height="256" fill="#ffffff" />
+  <text
+    x="128"
+    y="156"
+    text-anchor="middle"
+    font-family="'Roboto Serif', Georgia, Cambria, 'Times New Roman', Times, serif"
+    font-size="122"
+    font-weight="700"
+    letter-spacing="-5"
+    fill="#000000"
+  >
+    SPS
+  </text>
+</svg>
