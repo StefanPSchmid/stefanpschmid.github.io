@@ -79,7 +79,8 @@ const formatTags = (tags = []) => tags.map((tag) => `#${tag}`).join(', ');
 
 <style>
 	.home-intro {
-		margin: 4rem 0 2rem;
+		margin: 4rem auto 2rem;
+		max-width: 72rem;
 		display: grid;
 		gap: 3rem;
 		grid-template-columns: 1fr 1.25fr;
@@ -153,12 +154,13 @@ const formatTags = (tags = []) => tags.map((tag) => `#${tag}`).join(', ');
 		.home-intro {
 			grid-template-columns: 1fr;
 			gap: 2rem;
-			margin-top: 2.5rem;
+			margin: 2.5rem auto 2rem;
 		}
 	}
 
 	.home-news {
-		margin: 1.5rem 0 3rem;
+		margin: 1.5rem auto 3rem;
+		max-width: 66rem;
 	}
 
 	.home-news__header {
@@ -177,7 +179,7 @@ const formatTags = (tags = []) => tags.map((tag) => `#${tag}`).join(', ');
 	.home-news__all-link {
 		font-size: var(--font-size-sm);
 		color: inherit;
-		text-decoration: none;
+		text-decoration: underline;
 		opacity: 0.82;
 	}
 
@@ -188,7 +190,8 @@ const formatTags = (tags = []) => tags.map((tag) => `#${tag}`).join(', ');
 
 	.home-news__grid {
 		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
+		grid-template-columns: repeat(3, minmax(14rem, 20rem));
+		justify-content: center;
 		gap: 1rem;
 	}
 
@@ -227,6 +230,7 @@ const formatTags = (tags = []) => tags.map((tag) => `#${tag}`).join(', ');
 	@media (max-width: 960px) {
 		.home-news__grid {
 			grid-template-columns: 1fr;
+			justify-content: stretch;
 		}
 	}
 </style>

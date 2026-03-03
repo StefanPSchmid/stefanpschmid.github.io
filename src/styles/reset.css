@@ -37,15 +37,18 @@ body {
 	line-height: 1.5;
 }
 
-/* A elements that don't have a class get default styles */
-a:not([class]) {
-	text-decoration-skip-ink: auto;
-}
-
-/* A elements should be color inherit */
+/* Keep links visually identifiable by default */
 a {
 	color: inherit;
+	text-decoration-thickness: 0.08em;
+	text-underline-offset: 0.15em;
 	-webkit-tap-highlight-color: transparent;
+}
+
+/* Unstyled links should always render underlined */
+a:not([class]) {
+	text-decoration: underline;
+	text-decoration-skip-ink: auto;
 }
 
 /* Make images easier to work with */

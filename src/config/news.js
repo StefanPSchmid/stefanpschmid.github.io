@@ -23,6 +23,8 @@ export const newsEntries = [
 		publishDate: '2026-02-24',
 		tags: ['outreach'],
 		summary: 'I gave an invited talk at Rowan Scientific in Boston.',
+		readMoreUrl: 'https://rowansci.com/seminars',
+		readMoreLabel: 'Learn more about the seminar here',
 		body: [
 			'I was invited by Rowan as part of their Rowan seminar series to talk about my research on accelerating catalyst development in silico and in the wet-lab.',
 			'I shared our recent advances on transition state conformer generation methods and experimental design algorithms, including accessible platforms for chemists.',
