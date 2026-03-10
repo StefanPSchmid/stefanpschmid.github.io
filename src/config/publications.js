@@ -14,7 +14,7 @@ export const publications = [
 		title:
 			'Rapid generation of transition-state conformer ensembles via constrained distance geometry',
 		authors: '<u>S. P. Schmid</u>, H. Seng, T. Klay, K. Jorner',
-		citation: 'Schmid et al., J. Chem. Inf. Model. 2026, in press',
+		citation: 'Schmid et al., J. Chem. Inf. Model. 2026, 66, 5, 2777–2790',
 		paperUrl: 'https://doi.org/10.1021/acs.jcim.5c02794',
 		bibtexUrl: '/bibtex/schmid-2026-rapid-ts-conformers.bib',
 		codeUrl: 'https://github.com/digital-chemistry-laboratory/racerts',
