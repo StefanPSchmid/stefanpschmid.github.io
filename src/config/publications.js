@@ -3,9 +3,17 @@ export const fullBibliographyUrl = '/bibtex/all-publications-stefanpschmid.bib';
 export const publications = [
 	{
 		year: 2026,
+		title: 'General Reaction Conditions via Data-driven Optimisation',
+		authors: '<u>S. P. Schmid</u>, K. Jorner',
+		citation: 'S. P. Schmid, K. Jorner, Chimia 2026, 80, 242',
+		paperUrl: 'https://doi.org/10.2533/chimia.2026.242',
+		bibtexUrl: '/bibtex/schmid-2026-general-reaction-conditions.bib'
+	},
+	{
+		year: 2026,
 		title: 'Boosting Computational Catalysis and Chemical Reactivity with Artificial Intelligence',
 		authors: 'K. D. Vogiatzis, C. Corminboeuf, A. Nova, K. Jorner, J. Kästner, M. Meuwly, P. Schwaller, V. Böttcher, M. Drosou, E. Fako, H. Hoppe, Z. Ivkovic, N. Iwanojko, D. A. Pantazis, <u>S. P. Schmid</u>, K. Szenes, A. Tetenoire, M. Reiher',
-		citation: 'Vogiatzis et al., J. Am. Chem. Soc. 2026, in press',
+		citation: 'Vogiatzis et al., J. Am. Chem. Soc. 2026, 148, 9, 9143-9155',
 		paperUrl: 'https://doi.org/10.1021/jacs.5c17786',
 		bibtexUrl: '/bibtex/vogiatzis-2026-boosting-computational-catalysis.bib',
 	},
