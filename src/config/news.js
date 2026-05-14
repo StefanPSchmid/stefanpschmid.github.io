@@ -2,6 +2,19 @@ export const newsTagOptions = ['paper', 'awards', 'outreach', 'miscellaneous'];
 
 export const newsEntries = [
 		{
+			slug: 'Stay at Merck KGaA started',
+			title: 'I started my stay in the Digital Chemistry Group at Merck KGaA',
+			publishDate: '2026-05-01',
+			tags: ['outreach'],
+			summary:
+				'I started my stay in the Digital Chemistry Group at Merck KGaA, where I will work as a Computational Chemist for Machine Learning in Chemistry',
+			body: [
+				'From May to August 2026, I will be a member of the Digital Chemistry Group at Merck KGaA in Darmstadt, Germany.',
+				'Together with Philipp Harbach and his team, I will drive the frontiers of Machine Learning in Chemistry for Materials Discovery and Optimization.',
+				'I am already looking forward to this new step, with many learning opportunities to come!'
+			],
+		},
+		{
 		slug: 'new-ai4science-club-founded',
 		title: 'We founded a new AI4Science club to connect researchers in Zurich',
 		publishDate: '2026-03-01',

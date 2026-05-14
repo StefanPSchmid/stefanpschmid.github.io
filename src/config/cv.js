@@ -34,6 +34,12 @@ export const cvSections = [
 		title: 'Work experience',
 		items: [
 			{
+				date: 'May - Aug. 2026',
+				title: 'Computational Chemist for Machine Learning in Chemistry, Merck KGaA',
+				description: 
+					'Research stay at Merck KGaA, where I work on Materials Discovery and Optimization within the Digital Chemistry group of Merck KGaA',
+			}
+			{
 				date: 'Oct. 2023-Present',
 				title: 'Doctoral Researcher in Chemical Engineering, ETH Zurich',
 				description:
